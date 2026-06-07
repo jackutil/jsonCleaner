@@ -79,18 +79,18 @@ public class JsonCleaner {
 
     public static JsonNode cleanJson(@NonNull JsonNode json) {
         JsonNode copy = json.deepCopy();
-        deepClean(copy);
+        cleanJson(copy);
         return copy;
     }
 
-    private static void deepClean(JsonNode node) {
+    private static void cleanJson(JsonNode node) {
         switch (node) {
             case ObjectNode objectNode -> {
-                objectNode.properties().forEach(entry -> deepClean(entry.getValue()));
+                objectNode.properties().forEach(entry -> cleanJson(entry.getValue()));
                 objectNode.removeIf(JsonCleaner::isEmpty);
             }
             case ArrayNode arrayNode -> {
-                arrayNode.forEach(JsonCleaner::deepClean);
+                arrayNode.forEach(JsonCleaner::cleanJson);
                 arrayNode.removeIf(JsonCleaner::isEmpty);
             }
             default -> {
